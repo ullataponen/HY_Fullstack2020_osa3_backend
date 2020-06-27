@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+require("dotenv").config();
+const Person = require("./models/person");
 const cors = require("cors");
 
 app.use(cors());
@@ -45,7 +47,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/persons", (req, res) => {
-	res.json(persons);
+	Person.find({}).then((persons) => {
+		res.json(persons);
+	});
 });
 
 app.get("/info", (req, res) => {
@@ -56,14 +60,17 @@ app.get("/info", (req, res) => {
 });
 
 app.get("/api/persons/:id", (req, res) => {
-	const id = Number(req.params.id);
-	const person = persons.find((p) => p.id === id);
-
-	if (person) {
+	Person.findById(request.params.id).then((person) => {
 		res.json(person);
-	} else {
-		res.status(404).end();
-	}
+	});
+	// const id = Number(req.params.id);
+	// const person = persons.find((p) => p.id === id);
+
+	// if (person) {
+	// 	res.json(person);
+	// } else {
+	// 	res.status(404).end();
+	// }
 });
 
 app.post("/api/persons", (req, res) => {
@@ -71,7 +78,7 @@ app.post("/api/persons", (req, res) => {
 	const nameList = persons.map((p) => p.name);
 	console.log(nameList);
 
-	if (!body.name || !body.number) {
+	if (body.name === undefined || body.number === undefined) {
 		return res.status(400).json({
 			error: "name or number missing",
 		});
@@ -81,14 +88,17 @@ app.post("/api/persons", (req, res) => {
 		});
 	}
 
-	const person = {
+	const person = new Person({
 		name: body.name,
 		number: body.number,
-		id: generateId(),
-	};
+		//	id: generateId(),
+	});
 
-	persons = persons.concat(person);
-	res.json(person);
+	person.save().then((savedPerson) => {
+		res.json(savedPerson.toJSON());
+	});
+	// persons = persons.concat(person);
+	// res.json(person);
 });
 
 app.delete("/api/persons/:id", (req, res) => {
@@ -104,7 +114,7 @@ const generateId = () => {
 	return id;
 };
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
 	console.log(`Server running on port ${PORT}`);
 });
