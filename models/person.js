@@ -4,7 +4,7 @@ var uniqueValidator = require("mongoose-unique-validator");
 mongoose.set("useCreateIndex", true);
 
 const url = process.env.MONGODB_URI;
-console.log(typeof url);
+console.log(url, typeof url);
 
 console.log("connecting to", url);
 mongoose
