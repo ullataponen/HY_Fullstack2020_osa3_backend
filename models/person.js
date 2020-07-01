@@ -8,6 +8,7 @@ const url = process.env.MONGODB_URI;
 console.log("connecting to", url);
 mongoose
 	.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+	// eslint-disable-next-line no-unused-vars
 	.then((result) => {
 		console.log("connected to MongoDB");
 	})

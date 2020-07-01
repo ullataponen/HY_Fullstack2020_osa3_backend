@@ -24,22 +24,13 @@ const personSchema = new mongoose.Schema({
 
 const Person = mongoose.model("Person", personSchema);
 
-// const person = new Person({
-// 	name: "Arto Hellas",
-// 	number: "040-123456",
-// });
-
-// person.save().then((response) => {
-// 	console.log("person saved!", person);
-// 	mongoose.connection.close();
-// });
-
 if (process.argv.length === 5) {
 	const person = new Person({
 		name: process.argv[3],
 		number: process.argv[4],
 	});
 
+	// eslint-disable-next-line no-unused-vars
 	person.save().then((response) => {
 		console.log(
 			`successfully added ${person.name} number ${person.number} to phonebook`
